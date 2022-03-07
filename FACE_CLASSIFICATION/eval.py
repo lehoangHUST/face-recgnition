@@ -1,14 +1,6 @@
-import tensorflow as tf
-
-class MyModel(tf.keras.Model):
-
-  def __init__(self):
-    super().__init__()
-    self.dense1 = tf.keras.layers.Dense(4, activation=tf.nn.relu)
-    self.dense2 = tf.keras.layers.Dense(5, activation=tf.nn.softmax)
-
-  def call(self, inputs):
-    x = self.dense1(inputs)
-    return self.dense2(x)
-
-model = MyModel()
+import numpy as np
+label = []
+for i in range(2):
+  label.append([i+1]*2)
+label = np.array(label)
+print(label)

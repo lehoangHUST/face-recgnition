@@ -46,11 +46,13 @@ class FaceRecognitionDataset:
                     img = img[:, :, ::-1]
                     img = cv2.resize(img, (224, 224))
                     list_img.append(img)
-                list_label.append([obj + 1]*len(os.listdir(pth)))
+                list_label.append([obj + 1]*len(os.listdir(folder_sub)))
             self.features = np.array(list_img)
-            self.label = np.array(list_label).reshape((-1, 1))
+            self.label = np.array(list_label)
+            print(self.features.shape)
+            print(self.label)
             # train test split
-            self.Xtrain, self.Xtest, self.Ytrain, self.Ytest = train_test_split(self.features, self.label, self.ratio)
+            self.Xtrain, self.Xtest, self.Ytrain, self.Ytest = train_test_split(self.features, self.label, test_size=self.ratio)
         else:
             raise TypeError
 
