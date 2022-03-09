@@ -9,6 +9,7 @@ from tensorflow.keras.initializers import Constant
 
 # My source library
 from utils.dataset import FaceRecognitionDataset
+from backbone.network import Network
 
 
 #Callback Function which stops training when accuracy reaches 98%.
@@ -20,19 +21,21 @@ class myCallback(tensorflow.keras.callbacks.Callback):
 
 
 if __name__ == '__main__':
-    data = FaceRecognitionDataset(path='D:/Machine_Learning/Data/105_classes_pins_dataset', ratio=0.8)
-
-    trained_model = MobileNetV2(input_shape=(224, 224, 3),
+    Data = FaceRecognitionDataset(config='D:/Machine_Learning/face-recgnition/config/data.yaml')
+    data, label = Data.dataloader()
+    Xtrain, Xtest, Ytrain, Ytest = Data.split_data(0.8, data, label)
+    trained_model = EfficientNetB0(input_shape=(224, 224, 3),
                                 include_top=False,
                                 weights='imagenet')
+    trained_model.summary()
     trained_model.trainable = True  # Un-Freeze all the pretrained layers of 'MobileNetV2 for Training.
-    last_layer = trained_model.get_layer('out_relu')
+    last_layer = trained_model.get_layer('top_activation')
     last_layer_output = last_layer.output  # Saves the output of the last layer of the MobileNetV2.
     x = GlobalAveragePooling2D()(last_layer_output)
     # Add a Dropout layer.
     x = Dropout(0.8)(x)
     # Add a final softmax layer for classification.
-    x = Dense(105, activation='softmax')(x)
+    x = Dense(2, activation='softmax')(x)
 
     model = Model(trained_model.input, x)
 
@@ -42,4 +45,5 @@ if __name__ == '__main__':
     # Summary of the model.
     model.summary()
     callbacks = myCallback()
-    model.fit(data.Xtrain, data.Ytrain, batch_size=32, epochs=50, validation_data=(data.Xtest, data.Ytest), verbose=2)
+    
+    model.fit(Xtrain, Ytrain, batch_size=32, epochs=50, validation_data=(Xtest, Ytest), verbose=2)
