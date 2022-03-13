@@ -24,20 +24,8 @@ if __name__ == '__main__':
     Data = FaceRecognitionDataset(config='D:/Machine_Learning/face-recgnition/config/data.yaml')
     data, label = Data.dataloader()
     Xtrain, Xtest, Ytrain, Ytest = Data.split_data(0.8, data, label)
-    trained_model = EfficientNetB0(input_shape=(224, 224, 3),
-                                include_top=False,
-                                weights='imagenet')
-    trained_model.summary()
-    trained_model.trainable = True  # Un-Freeze all the pretrained layers of 'MobileNetV2 for Training.
-    last_layer = trained_model.get_layer('top_activation')
-    last_layer_output = last_layer.output  # Saves the output of the last layer of the MobileNetV2.
-    x = GlobalAveragePooling2D()(last_layer_output)
-    # Add a Dropout layer.
-    x = Dropout(0.8)(x)
-    # Add a final softmax layer for classification.
-    x = Dense(2, activation='softmax')(x)
 
-    model = Model(trained_model.input, x)
+    model = Network(pre_train='efficientNet-b0', input_shape=(160, 160, 3), num_class=2)
 
     model.compile(loss='categorical_crossentropy',
                   optimizer='adam',

@@ -39,6 +39,8 @@ class FaceRecognitionDataset:
         else:
             raise TypeError
         self.config = config
+        self.num_class = len(os.listdir(config['path']))
+        self.imgsz = config['resize']
         self.data = None
         self.label = None
 
@@ -54,7 +56,9 @@ class FaceRecognitionDataset:
                     img = cv2.imread(os.path.join(folder_sub, folder))
                     # Convert BGR to RGB
                     img = img[:, :, ::-1]
-                    img = cv2.resize(img, (self.config['resize'], self.config['resize']))
+                    img = cv2.resize(img, (self.imgsz, self.imgsz))
+                    # Normalization
+                    img = img/255.0
                     list_img.append(img)
                     list_label.append(obj)
             data = np.array(list_img)
@@ -71,11 +75,6 @@ class FaceRecognitionDataset:
         else:
             Xtrain, Xtest, Ytrain, Ytest = train_test_split(data, label, test_size=ratio, random_state=42)
             return Xtrain, Xtest, Ytrain, Ytest
-
-    # Number class in dataset
-    def n_class(self):
-        path = self.config['path']
-        return len(self.config['path'])
 
 
 # Plot data image face.

@@ -19,10 +19,10 @@ def build_Model(pretrain: str,
     :param num_class: Output classification
     :return: model new (transfer learning + create layer)
     """
-    __MODEL_PRETRAIN__ = ['efficientNet-b0',
-                          'efficientNet-b1',
-                          'efficientNet-b2',
-                          'mobile-netv2']
+
+    # Check conditional input_shape and num_class
+
+
     model = {
         'efficientNet-b0': EfficientNetB0(input_shape=input_shape, include_top=False, weights='imagenet'),
         'efficientNet-b1': EfficientNetB1(input_shape=input_shape, include_top=False, weights='imagenet'),
