@@ -1,5 +1,8 @@
 # Our source library
 import tensorflow
+import os, sys
+import argparse
+import numpy as np
 from tensorflow.keras.applications import *
 from tensorflow.keras import Sequential
 from tensorflow.keras.layers import (Conv2D, MaxPooling2D, Flatten, Dense, AveragePooling2D, Dropout, concatenate, Activation, BatchNormalization, GlobalAvgPool2D, GlobalAveragePooling2D, LeakyReLU, Input)
@@ -9,15 +12,9 @@ from tensorflow.keras.initializers import Constant
 
 # My source library
 from utils.dataset import FaceRecognitionDataset
-from backbone.network import Network
+from utils.general import LossCallback, save_modelckpt
+from backbone.network import build_model
 
-
-#Callback Function which stops training when accuracy reaches 98%.
-class myCallback(tensorflow.keras.callbacks.Callback):
-  def on_epoch_end(self, epoch, logs={}):
-    if(logs.get('accuracy') > 0.98):
-      print("\nReached 98% accuracy so cancelling training!")
-      self.model.stop_training = True
 
 
 if __name__ == '__main__':
@@ -25,13 +22,12 @@ if __name__ == '__main__':
     data, label = Data.dataloader()
     Xtrain, Xtest, Ytrain, Ytest = Data.split_data(0.8, data, label)
 
-    model = Network(pre_train='efficientNet-b0', input_shape=(160, 160, 3), num_class=2)
+    model = build_model(pretrain='efficientNet-b0', input_shape=(224, 224, 3), num_class=2)
 
-    model.compile(loss='categorical_crossentropy',
-                  optimizer='adam',
+    model.compile(optimizer='adam',
+                  loss='categorical_crossentropy',
                   metrics=['accuracy'])
     # Summary of the model.
     model.summary()
-    callbacks = myCallback()
     
-    model.fit(Xtrain, Ytrain, batch_size=32, epochs=50, validation_data=(Xtest, Ytest), verbose=2)
+    model.fit(Xtrain, Ytrain, batch_size=32, epochs=50, validation_data=(Xtest, Ytest), verbose=0, callbacks=[LossCallback()])

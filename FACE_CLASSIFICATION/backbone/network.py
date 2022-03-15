@@ -10,7 +10,7 @@ from tensorflow.keras.applications import *
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 
-def build_Model(pretrain: str,
+def build_model(pretrain: str,
                 input_shape: tuple,
                 num_class: int):
     """
@@ -51,7 +51,3 @@ def build_Model(pretrain: str,
 
     model = Model(MODEL.input, x)
     return model
-
-
-if __name__ == '__main__':
-    build_Model("efficientNet-b0", input_shape=(160, 160, 3), num_class=3)
