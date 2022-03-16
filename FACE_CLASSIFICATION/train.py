@@ -15,19 +15,49 @@ from utils.dataset import FaceRecognitionDataset
 from utils.general import LossCallback, save_modelckpt
 from backbone.network import build_model
 
+# ArgumentParser
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--config', type=str, default='D:/Machine_Learning/face-recgnition/config/data.yaml')
+    parser.add_argument('--pretrain', type=str, default='efficientNet-b0')
+    parser.add_argument('--batch_size', type=int, default=1)
+    parser.add_argument('-epochs', type=int, default=10)
+    args = parser.parse_args()
+    return args
 
 
-if __name__ == '__main__':
-    Data = FaceRecognitionDataset(config='D:/Machine_Learning/face-recgnition/config/data.yaml')
+# Run train model
+def run(args):
+    config, pretrain, batch_size, epochs = args.config, args.pretrain, args.batch_size, args.epochs
+    # Load data
+    print("Loading dataset....")
+    Data = FaceRecognitionDataset(config=config)
     data, label = Data.dataloader()
+    print("Loaded dataset...")
+
+    # Split dataset
     Xtrain, Xtest, Ytrain, Ytest = Data.split_data(0.8, data, label)
 
-    model = build_model(pretrain='efficientNet-b0', input_shape=(224, 224, 3), num_class=2)
+    # Load model
+    print("Loading model...")
+    model = build_model(pretrain='efficientNet-b0', input_shape=data[0].shape, num_class=2)
 
+    # Use optimizer: adam + loss function: categorical_crossentropy + metrics: accuracy
+    # Can design by yourself
     model.compile(optimizer='adam',
                   loss='categorical_crossentropy',
                   metrics=['accuracy'])
-    # Summary of the model.
+    print("Loaed model...")
     model.summary()
-    
-    model.fit(Xtrain, Ytrain, batch_size=32, epochs=50, validation_data=(Xtest, Ytest), verbose=0, callbacks=[LossCallback()])
+
+    # Train
+    model.fit(Xtrain, Ytrain, batch_size=batch_size, epochs=epochs, verbose=0, callbacks=[LossCallback()])
+
+    # Evaluate
+    model.evaluate(Xtest, Ytest, batch_size=batch_size, epochs=batch_size, verbose=0, callbacks=[LossCallback()])
+
+
+if __name__ == '__main__':
+    args = parse_args()
+    run(args)
+

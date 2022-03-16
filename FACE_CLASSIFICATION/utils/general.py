@@ -8,6 +8,11 @@ class LossCallback(tf.keras.callbacks.Callback):
             "Up to batch {}, the average loss is {:7.2f}.".format(batch, logs["loss"])
         )
 
+    def on_test_batch_end(self, batch, logs=None):
+        print(
+            "Up to batch {}, the average loss is {:7.2f}.".format(batch, logs["loss"])
+        )
+
     def on_epoch_end(self, epoch, logs={}):
         print(
             "The average loss for epoch {} is {:7.2f} "
