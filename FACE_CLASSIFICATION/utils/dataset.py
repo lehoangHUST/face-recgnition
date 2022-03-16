@@ -25,10 +25,15 @@ VID_FORMATS = ['mov', 'avi', 'mp4', 'mpg', 'mpeg', 'm4v', 'wmv', 'mkv']  # accep
         + image 1 of object2
         + image 2 of object2
         + .....
-    - .......    
+    - ....... 
+    - objectn/
+        + image 1 of objectn
+        + image 2 of objectn
+        + .....   
 """
 
 
+# Config augmentation after.
 class FaceRecognitionDataset:
     def __init__(self, config):
         if isinstance(config, dict):
@@ -78,10 +83,27 @@ class FaceRecognitionDataset:
 
 
 # Plot data image face.
-def plot_image(path, ):
-    pass
-
-
-if __name__ == '__main__':
-    dataset = FaceRecognitionDataset('D:/Machine_Learning/face-recgnition/config/data.yaml')
-    dataset.dataloader()
+def plot_image(path: str):
+    if os.path.isfile(path):
+        suffix = path.split('.')[-1]
+        if suffix in IMG_FORMATS:
+            img = cv2.imread(path)
+            img = img[:, :, ::-1]
+            plt.imshow(img)
+            plt.show()
+        else:
+            raise TypeError
+    else:
+        for path_img in os.listdir(path):
+            folder_sub = os.path.join(path, path_img)
+            for _ in tqdm(os.listdir(folder_sub), leave=False):
+                image_name = _.split('.')[0]
+                if os.path.join(folder_sub, _).split('.')[-1] in IMG_FORMATS:
+                    img = cv2.imread(os.path.join(folder_sub, _))
+                    img = img[:, :, ::-1]
+                    plt.imshow(img)
+                    plt.title(image_name)
+                    plt.show()
+                else:
+                    note = f"{image_name} not is IMG_FORMATS"
+                    print(note)

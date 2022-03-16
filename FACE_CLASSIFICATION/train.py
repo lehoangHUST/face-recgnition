@@ -15,6 +15,7 @@ from utils.dataset import FaceRecognitionDataset
 from utils.general import LossCallback, save_modelckpt
 from backbone.network import build_model
 
+
 # ArgumentParser
 def parse_args():
     parser = argparse.ArgumentParser()
@@ -51,10 +52,7 @@ def run(args):
     model.summary()
 
     # Train
-    model.fit(Xtrain, Ytrain, batch_size=batch_size, epochs=epochs, verbose=0, callbacks=[LossCallback()])
-
-    # Evaluate
-    model.evaluate(Xtest, Ytest, batch_size=batch_size, epochs=batch_size, verbose=0, callbacks=[LossCallback()])
+    model.fit(Xtrain, Ytrain, batch_size=batch_size, epochs=epochs, validation_data=(Xtest, Ytest), verbose=2)
 
 
 if __name__ == '__main__':
