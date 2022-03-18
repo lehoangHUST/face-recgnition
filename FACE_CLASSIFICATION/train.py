@@ -41,7 +41,7 @@ def run(args):
 
     # Load model
     print("Loading model...")
-    model = build_model(pretrain='efficientNet-b0', input_shape=data[0].shape, num_class=2)
+    model = build_model(pretrain='efficientNet-b0', input_shape=data[0].shape, num_class=Data.num_class)
 
     # Use optimizer: adam + loss function: categorical_crossentropy + metrics: accuracy
     # Can design by yourself

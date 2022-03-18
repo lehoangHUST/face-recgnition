@@ -43,25 +43,29 @@ def baseModel():
     model.add(Convolution2D(2622, (1, 1)))
     model.add(Flatten())
     model.add(Activation('softmax'))
-
+    # Summary model
     model.summary()
+    return model
 
 
 # url = 'https://drive.google.com/uc?id=1CPSeum3HpopfomUEK1gybeuIVoeJT_Eo'
 def loadModel(url='https://github.com/serengil/deepface_models/releases/download/v1.0/vgg_face_weights.h5'):
     model = baseModel()
     # -----------------------------------
-    output = os.getcwd() + '/.deepface/weights/vgg_face_weights.h5'
-    if not os.path.isfile(output):
+
+    path_weights = os.getcwd() + '/vgg_face_weights.h5'
+    if not os.path.isfile(path_weights):
         print("vgg_face_weights.h5 will be downloaded...")
-        gdown.download(url, output, quiet=False)
+        gdown.download(url, path_weights, quiet=False)
 
     # -----------------------------------
 
-    model.load_weights(output)
+    model.load_weights(path_weights)
 
     # -----------------------------------
 
     # TO-DO: why?
     descriptor = Model(inputs=model.layers[0].input, outputs=model.layers[-2].output)
     return descriptor
+
+loadModel()
