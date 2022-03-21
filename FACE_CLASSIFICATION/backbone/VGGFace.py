@@ -49,7 +49,7 @@ def baseModel():
 
 
 # url = 'https://drive.google.com/uc?id=1CPSeum3HpopfomUEK1gybeuIVoeJT_Eo'
-def loadModel(url='https://github.com/serengil/deepface_models/releases/download/v1.0/vgg_face_weights.h5'):
+def VGGFaceModel(url='https://github.com/serengil/deepface_models/releases/download/v1.0/vgg_face_weights.h5'):
     model = baseModel()
     # -----------------------------------
 
@@ -67,5 +67,3 @@ def loadModel(url='https://github.com/serengil/deepface_models/releases/download
     # TO-DO: why?
     descriptor = Model(inputs=model.layers[0].input, outputs=model.layers[-2].output)
     return descriptor
-
-loadModel()
