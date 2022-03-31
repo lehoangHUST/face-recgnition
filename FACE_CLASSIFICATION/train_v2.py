@@ -57,6 +57,10 @@ def run(args):
             embedding_vector = model.predict(np.expand_dims(img, axis=0))[0]
             embeddings_train[i] = embedding_vector
 
+        for i, img in enumerate(Xtest):
+            embedding_vector = model.predict(np.expand_dims(img, axis=0))[0]
+            embeddings_test[i] = embedding_vector
+
         # Standard data
         scaler = StandardScaler()
         Xtrain_std = scaler.fit_transform(embeddings_train)
@@ -71,8 +75,6 @@ def run(args):
         clf = SVC(C=5., gamma=0.001)
         clf.fit(X_train_pca, Ytrain)
         y_predict = clf.predict(X_test_pca)
-
-
 
     else:
         raise TypeError
