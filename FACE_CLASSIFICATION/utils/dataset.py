@@ -44,7 +44,6 @@ class FaceRecognitionDataset:
         else:
             raise TypeError
         self.config = config
-        self.num_class = len(os.listdir(config['path']))
         self.imgsz = config['resize']
         self.data = None
         self.label = None
@@ -71,6 +70,15 @@ class FaceRecognitionDataset:
             return data, cls
         else:
             raise TypeError
+
+    # Num data in each class
+    def num_cls(self):
+        num_class = len(os.listdir(self.config['path']))
+        # dict_num_class include ------ key: name class and values: number each class
+        dict_num_class = {}
+        for dir_class in os.listdir(self.config['path']):
+            dict_num_class[dir_class] = len(os.listdir(os.path.join(self.config['path'], dir_class)))
+        return dict_num_class
 
     # Get dataset
     @staticmethod
@@ -107,3 +115,8 @@ def plot_image(path: str):
                 else:
                     note = f"{image_name} not is IMG_FORMATS"
                     print(note)
+
+
+if __name__ == '__main__':
+    data = FaceRecognitionDataset('D:/Machine_Learning/face-recgnition/config/data.yaml')
+    data.num_cls()
