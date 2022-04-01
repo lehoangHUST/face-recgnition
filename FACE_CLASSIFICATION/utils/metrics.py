@@ -1,6 +1,7 @@
 import numpy as np
 import tensorflow as tf
 from numpy.linalg import norm
+import matplotlib.pyplot as plt
 
 
 # =====================================
