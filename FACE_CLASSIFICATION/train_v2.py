@@ -4,12 +4,16 @@ import cv2
 import os
 import sys
 import argparse
+import pickle
 from tqdm import tqdm
 
 # Standardize features
 from sklearn.preprocessing import StandardScaler
 from sklearn.decomposition import PCA
 from sklearn.svm import SVC
+
+# Accuracy score
+from sklearn.metrics import accuracy_score
 
 # My source library
 from utils.dataset import FaceRecognitionDataset
@@ -75,6 +79,12 @@ def run(args):
         clf = SVC(C=5., gamma=0.001)
         clf.fit(X_train_pca, Ytrain)
         y_predict = clf.predict(X_test_pca)
+
+        print('Accuracy for predict model is: ', accuracy_score(Ytest, y_predict))
+
+        # Save model
+        if args.save:
+            pickle.dump(model, open('model.pkl', 'wb'))
 
     else:
         raise TypeError

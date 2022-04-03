@@ -66,7 +66,7 @@ class FaceRecognitionDataset:
                     list_img.append(img)
                     list_label.append(obj)
             data = np.array(list_img)
-            cls = to_categorical(np.array(list_label))
+            cls = np.array(list_label)
             return data, cls
         else:
             raise TypeError
