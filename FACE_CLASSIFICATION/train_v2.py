@@ -65,25 +65,16 @@ def run(args):
             embedding_vector = model.predict(np.expand_dims(img, axis=0))[0]
             embeddings_test[i] = embedding_vector
 
-        # Standard data
-        scaler = StandardScaler()
-        Xtrain_std = scaler.fit_transform(embeddings_train)
-        Xtest_std = scaler.fit_transform(embeddings_test)
-
-        # Reduce dimensional
-        pca = PCA(n_components=128)
-        X_train_pca = pca.fit_transform(Xtrain_std)
-        X_test_pca = pca.transform(Xtest_std)
 
         #  Train
         clf = SVC(C=5., gamma=0.001)
-        clf.fit(X_train_pca, Ytrain)
-        y_predict = clf.predict(X_test_pca)
+        clf.fit(embeddings_train, Ytrain)
+        y_predict = clf.predict(embeddings_test)
 
         print('Accuracy for predict model is: ', accuracy_score(Ytest, y_predict))
 
         # Save model
-        if args.save:
+        if save:
             pickle.dump(model, open('model.pkl', 'wb'))
 
     else:

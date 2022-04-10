@@ -53,7 +53,7 @@ def VGGFaceModel(url='https://github.com/serengil/deepface_models/releases/downl
     model = baseModel()
     # -----------------------------------
 
-    path_weights = os.getcwd() + '/vgg_face_weights.h5'
+    path_weights = 'D:/Machine_Learning/vgg_face_weights.h5'
     if not os.path.isfile(path_weights):
         print("vgg_face_weights.h5 will be downloaded...")
         gdown.download(url, path_weights, quiet=False)

@@ -54,12 +54,12 @@ class FaceRecognitionDataset:
         list_label = []
         path = self.config['path']
         if os.path.isdir(path):
+            print(os.listdir(path))
             for obj, pth in enumerate(os.listdir(path)):
                 folder_sub = os.path.join(path, pth)
                 for folder in tqdm(os.listdir(folder_sub), desc=f'{pth}'):
                     img = cv2.imread(os.path.join(folder_sub, folder))
                     # Convert BGR to RGB
-                    img = img[:, :, ::-1]
                     img = cv2.resize(img, (self.imgsz, self.imgsz))
                     # Normalization
                     img = img/255.0
@@ -90,8 +90,24 @@ class FaceRecognitionDataset:
             return Xtrain, Xtest, Ytrain, Ytest
 
 
+# Rename type in images
+def rename_file(source: str, rename_type: str):
+    if os.path.isdir(source):
+        for pth in os.listdir(source):
+            so
+    elif os.path.isfile(source):
+        pass
+    else:
+        raise TypeError
+
+
 # Plot data image face.
 def plot_image(path: str):
+    """
+
+    :param path:
+    :return:
+    """
     if os.path.isfile(path):
         suffix = path.split('.')[-1]
         if suffix in IMG_FORMATS:
@@ -118,5 +134,4 @@ def plot_image(path: str):
 
 
 if __name__ == '__main__':
-    data = FaceRecognitionDataset('D:/Machine_Learning/face-recgnition/config/data.yaml')
-    data.num_cls()
+    rename_file(source='D:/Dataset/train/Trouser', rename_type='trousers')
