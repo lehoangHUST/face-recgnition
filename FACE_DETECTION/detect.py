@@ -32,8 +32,29 @@ def evalimage(detector, inp: str):
         plt.imshow(img[:, :, ::-1])
         plt.show()
     else:
-        path_save = inp.split('.')[0] + '_out.jpg'
+        path_save = inp.split('.')[0] + '.jpg'
         cv2.imwrite(path_save, img)
+
+
+# Crop face : Application for one face in image
+def crop_face(inp: str):
+    detector = MTCNN()
+    if os.path.isdir(inp):
+        for pth in os.listdir(inp):
+            img = cv2.imread(os.path.join(inp, pth))
+            results = detector.detect_faces(img)
+            if len(results):
+                x, y, w, h = results[0]['box']
+                crop_img = img[y:y + h, x:x + w, :]
+                cv2.imwrite(os.path.join(inp, pth), crop_img)
+    elif os.path.isfile(inp):
+        img = cv2.imread(inp)
+        results = detector.detect_faces(img)
+        x, y, w, h = results[0]['box']
+        crop_img = img[y:y+h, x:x+w, :]
+        cv2.imwrite(inp, crop_img)
+    else:
+        raise TypeError
 
 
 # Inference
@@ -53,4 +74,4 @@ def run(args):
 
 
 if __name__ == '__main__':
-    run(args)
+    crop_face('D:/Machine_Learning/Data/105_classes_pins_dataset/pins_Amanda Crew')

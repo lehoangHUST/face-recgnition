@@ -91,10 +91,20 @@ class FaceRecognitionDataset:
 
 
 # Rename type in images
-def rename_file(source: str, rename_type: str):
+def rename_file(source: str, rename_type: str, source_type: list):
+
+    if not all(isinstance(item, str) for item in source_type):
+        raise TypeError
+
     if os.path.isdir(source):
-        for pth in os.listdir(source):
-            so
+        for i, pth in enumerate(os.listdir(source)):
+            src_pth = os.path.join(source, pth)
+            *name, idx = pth.split('.')[0].split('--')
+            for type in source_type:
+                if type in '--'.join(name):
+                    dist_pth = os.path.join(source, '--'.join(name).replace(type, rename_type) + '--' + str(i+1) + '.jpg')
+                    os.rename(src_pth, dist_pth)
+                    break
     elif os.path.isfile(source):
         pass
     else:
@@ -134,4 +144,4 @@ def plot_image(path: str):
 
 
 if __name__ == '__main__':
-    rename_file(source='D:/Dataset/train/Trouser', rename_type='trousers')
+    rename_file(source='C:/Users/Administrator/Downloads/All', rename_type='Trousers', source_type=['Chinos', 'Jean', 'Legging'])

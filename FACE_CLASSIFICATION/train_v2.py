@@ -65,8 +65,7 @@ def run(args):
             embedding_vector = model.predict(np.expand_dims(img, axis=0))[0]
             embeddings_test[i] = embedding_vector
 
-
-        #  Train
+        # Train
         clf = SVC(C=5., gamma=0.001)
         clf.fit(embeddings_train, Ytrain)
         y_predict = clf.predict(embeddings_test)
@@ -75,7 +74,7 @@ def run(args):
 
         # Save model
         if save:
-            pickle.dump(model, open('model.pkl', 'wb'))
+            pickle.dump(clf, open('model.pkl', 'wb'))
 
     else:
         raise TypeError
