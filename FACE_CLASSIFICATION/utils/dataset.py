@@ -54,7 +54,6 @@ class FaceRecognitionDataset:
         list_label = []
         path = self.config['path']
         if os.path.isdir(path):
-            print(os.listdir(path))
             for obj, pth in enumerate(os.listdir(path)):
                 folder_sub = os.path.join(path, pth)
                 for folder in tqdm(os.listdir(folder_sub), desc=f'{pth}'):
